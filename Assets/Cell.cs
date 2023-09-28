@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
-    public bool lifeState;
+    public bool isAlive;
     public bool nextLifeState;
 
-    //sprite bool=?
     SpriteRenderer spriteRenderer;
 
     public void UpdateStatus()
     {
         spriteRenderer ??= GetComponent<SpriteRenderer>();
-        spriteRenderer.enabled = lifeState;   
+        spriteRenderer.enabled = isAlive;   
     }
 
     public void UpdateNextLifeState()
     {
-        lifeState = nextLifeState;
+        isAlive = nextLifeState;
     }
 }
 

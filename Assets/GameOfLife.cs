@@ -11,8 +11,7 @@ public class GameOfLife : MonoBehaviour
     int numberOfColums, numberOfRows;
     int spawnChancePercentage = 15;
 
-    int numberOfAliveNeighbors;
-
+    int numberOfAliveCells;
 
     void Start()
     {
@@ -24,7 +23,6 @@ public class GameOfLife : MonoBehaviour
                                                     * Camera.main.aspect ) / cellSize);
 
         cells = new Cell[numberOfColums, numberOfRows];
-
 
         for (int y = 0; y < numberOfRows; y++)
         {
@@ -41,7 +39,7 @@ public class GameOfLife : MonoBehaviour
 
                 if (Random.Range(0, 100) < spawnChancePercentage)
                 {
-                    cells[x, y].lifeState = true;
+                    cells[x, y].isAlive = true;
                 }
 
                 cells[x, y].UpdateStatus();
@@ -56,35 +54,36 @@ public class GameOfLife : MonoBehaviour
             for (int x = 0; x < numberOfColums; x++)
             {
                 CheckNeighborsAndOwnCell(x, y);
-                CompensateForCheckingOwnCell(x, y);
                 
-                if (CurrentLifeState(x, y))
+                if (cells[x, y].isAlive)
                 {
-                    if (numberOfAliveNeighbors < 2)
+                    numberOfAliveCells--;   // Compensation for counting own cell
+
+                    if (numberOfAliveCells < 2)
                     {
                         cells[x, y].nextLifeState = false;
                     }
 
-                    if (numberOfAliveNeighbors == 2 || numberOfAliveNeighbors == 3)
+                    if (numberOfAliveCells == 2 || numberOfAliveCells == 3)
                     {
                         cells[x, y].nextLifeState = true;
                     }
 
-                    if (numberOfAliveNeighbors > 3)
+                    if (numberOfAliveCells > 3)
                     {
                         cells[x, y].nextLifeState = false;
                     }
                 }
 
-                if (CurrentLifeState(x, y) == false)
+                else
                 {
-                    if (numberOfAliveNeighbors == 3)
+                    if (numberOfAliveCells == 3)
                     {
                         cells[x, y].nextLifeState = true;
                     }
                 }
 
-                numberOfAliveNeighbors = 0;
+                numberOfAliveCells = 0;
 
                 cells[x, y].UpdateStatus();
             }
@@ -119,23 +118,10 @@ public class GameOfLife : MonoBehaviour
         if (y >= 0 && y < numberOfRows &&
             x >= 0 && x < numberOfColums)
         {
-            if (cells[x, y].lifeState == true)
+            if (cells[x, y].isAlive == true)
             {
-                numberOfAliveNeighbors++;
+                numberOfAliveCells++;
             }
         }
-    }
-
-    void CompensateForCheckingOwnCell(int x, int y)
-    {
-        if (cells[x, y].lifeState == true)
-        {
-            numberOfAliveNeighbors--;
-        }
-    }
-
-    bool CurrentLifeState(int x, int y)
-    {
-        return cells[x, y].lifeState;
     }
 }
