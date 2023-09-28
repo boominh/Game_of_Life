@@ -8,7 +8,7 @@ public class GameOfLife : MonoBehaviour
 {
     public GameObject cellPrefab;
     Cell[,] cells;
-    
+
     float cellSize = 0.25f;
     int numberOfColums, numberOfRows;
     int spawnChancePercentage = 15;
@@ -27,6 +27,9 @@ public class GameOfLife : MonoBehaviour
             Camera.main.aspect * 2) / cellSize);
         numberOfRows = (int)Mathf.Floor(Camera.main.orthographicSize * 2 / cellSize);
 
+        Debug.Log("Columns: " + numberOfColums);
+        Debug.Log("Rows: " + numberOfRows);
+
         //Initiate our matrix array
         cells = new Cell[numberOfColums, numberOfRows];
 
@@ -42,8 +45,9 @@ public class GameOfLife : MonoBehaviour
                 Vector2 newPos = new Vector2(x * cellSize - Camera.main.orthographicSize *
                     Camera.main.aspect,
                     y * cellSize - Camera.main.orthographicSize);
+                Vector2 offsetVector = new Vector2(cellSize / 2, cellSize / 2);
 
-                var newCell = Instantiate(cellPrefab, newPos, Quaternion.identity);
+                var newCell = Instantiate(cellPrefab, newPos + offsetVector, Quaternion.identity);
                 newCell.transform.localScale = Vector2.one * cellSize;
                 cells[x, y] = newCell.GetComponent<Cell>();
 
@@ -57,6 +61,8 @@ public class GameOfLife : MonoBehaviour
             }
         }
     }
+
+    
     void Update()
     {
 
@@ -69,9 +75,11 @@ public class GameOfLife : MonoBehaviour
 
         for (int y = 0; y < numberOfRows; y++)
         {
+            Debug.Log("Y is: " + y);
+
             for (int x = 0; x < numberOfColums; x++)
             {
-                cells[x, y].UpdateStatus();
+                Debug.Log("X is: " + x);
 
                 CheckNeighborsAndOwnCell(x, y);
                 CompensateForCheckingOwnCell(x, y);
@@ -103,6 +111,8 @@ public class GameOfLife : MonoBehaviour
                 }
 
                 numberOfAliveNeighbors = 0;
+
+                cells[x, y].UpdateStatus();
             }
         }
     }
@@ -116,6 +126,7 @@ public class GameOfLife : MonoBehaviour
 
     void CompensateForCheckingOwnCell(int x, int y)
     {
+        Debug.Log("Currently checking  (" +  x + ", " + y + ")");
         if (cells[y, x].lifeState == true)
         {
             numberOfAliveNeighbors--;
@@ -127,17 +138,18 @@ public class GameOfLife : MonoBehaviour
         CheckNeighborLifeState(x, y - 1);
         CheckNeighborLifeState(x, y + 0);
         CheckNeighborLifeState(x, y + 1);
-
-        //for (int yn = (y - 1); yn <= (y + 1)  ; yn++)
-        //{
-        //    CheckCellState(x, yn);
-        //}
     }
+
     void CheckNeighborLifeState(int x, int y)
     {
-        if (cells[x, y].lifeState == true)
+        // Edge case
+        if (y >= 0 && y <= numberOfRows &&
+            x >= 0 && x <= numberOfColums)
         {
-            numberOfAliveNeighbors++;
+            if (cells[x, y].lifeState == true)
+            {
+                numberOfAliveNeighbors++;
+            }
         }
     }
 
@@ -146,3 +158,7 @@ public class GameOfLife : MonoBehaviour
         return cells[x, y].lifeState;
     }
 }
+        //for (int yn = (y - 1); yn <= (y + 1)  ; yn++)
+        //{
+        //    CheckCellState(x, yn);
+        //}
