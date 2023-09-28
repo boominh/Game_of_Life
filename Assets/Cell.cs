@@ -13,8 +13,19 @@ public class Cell : MonoBehaviour
     public void UpdateStatus()
     {
         spriteRenderer ??= GetComponent<SpriteRenderer>();
-        spriteRenderer.enabled = lifeState;
-        
+        spriteRenderer.enabled = lifeState;   
+    }
+
+    public void UpdateNextLifeState()
+    {
         lifeState = nextLifeState;
     }
 }
+
+
+//TODO: Calculate next generation
+// check neighbors -> make function?
+// different code depending on # of neighbors
+// edge cases
+// numberOfAliveNeighbors
+// CompensateOwnCell
