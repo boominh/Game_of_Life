@@ -71,11 +71,12 @@ public class GameOfLife : MonoBehaviour
         {
             for (int x = 0; x < numberOfColums; x++)
             {
-                CheckNeighborsAndOwnCell(x, y);
-                CompensateForOwnCell(x, y);
+                cells[x, y].UpdateStatus();
 
+                CheckNeighborsAndOwnCell(x, y);
+                CompensateForCheckingOwnCell(x, y);
                 
-                if (CheckLifeState(x, y))
+                if (CurrentLifeState(x, y))
                 {
                     if (numberOfAliveNeighbors < 2)
                     {
@@ -91,44 +92,36 @@ public class GameOfLife : MonoBehaviour
                     {
                         cells[y, x].nextLifeState = false;
                     }
-
                 }
 
-                if (CheckLifeState(x, y) == false)
+                if (CurrentLifeState(x, y) == false)
                 {
                     if (numberOfAliveNeighbors == 3)
                     {
                         cells[y, x].nextLifeState = true;
                     }
                 }
-            }
-        }
 
-        //TODO: update buffer
-
-        // Updates
-        for (int y = 0; y < numberOfRows; y++)
-        {
-            for (int x = 0; x < numberOfColums; x++)
-            {
-                cells[x, y].UpdateStatus();
+                numberOfAliveNeighbors = 0;
             }
         }
     }
 
-    void CompensateForOwnCell(int x, int y)
-    {
-        if (cells[y, x].lifeState == true)
-        {
-            numberOfAliveNeighbors--;
-        }
-    }
     void CheckNeighborsAndOwnCell(int x, int y)
     {
         CheckColumn(x - 1, y);
         CheckColumn(x + 0, y);
         CheckColumn(x + 1, y);
     }
+
+    void CompensateForCheckingOwnCell(int x, int y)
+    {
+        if (cells[y, x].lifeState == true)
+        {
+            numberOfAliveNeighbors--;
+        }
+    }
+
     void CheckColumn(int x, int y)
     {
         CheckNeighborLifeState(x, y - 1);
@@ -148,7 +141,7 @@ public class GameOfLife : MonoBehaviour
         }
     }
 
-    bool CheckLifeState(int x, int y)
+    bool CurrentLifeState(int x, int y)
     {
         return cells[x, y].lifeState;
     }
