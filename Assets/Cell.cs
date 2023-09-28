@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
-    public bool alive;
+    public bool lifeState;
 
     SpriteRenderer spriteRenderer;
 
     public void UpdateStatus()
     {
         spriteRenderer ??= GetComponent<SpriteRenderer>();
-        spriteRenderer.enabled = alive;
+        spriteRenderer.enabled = lifeState;
     }
 }

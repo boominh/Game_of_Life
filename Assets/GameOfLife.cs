@@ -6,9 +6,13 @@ public class GameOfLife : MonoBehaviour
 {
     public GameObject cellPrefab;
     Cell[,] cells;
+    
     float cellSize = 0.25f;
     int numberOfColums, numberOfRows;
     int spawnChancePercentage = 15;
+
+    int numberOfAliveNeighbors;
+
 
     void Start()
     {
@@ -44,7 +48,7 @@ public class GameOfLife : MonoBehaviour
                 //Random check to see if it should be alive
                 if (Random.Range(0, 100) < spawnChancePercentage)
                 {
-                    cells[x, y].alive = true;
+                    cells[x, y].lifeState = true;
                 }
 
                 cells[x, y].UpdateStatus();
@@ -55,10 +59,42 @@ public class GameOfLife : MonoBehaviour
     {
 
         //TODO: Calculate next generation
+        // check neighbors -> make function?
+        // different code depending on # of neighbors
+        // edge cases
+        // numberOfAliveNeighbors
+
+        for (int y = 0; y < numberOfRows; y++)
+        {
+            for (int x = 0; x < numberOfColums; x++)
+            {
+                void CheckColumn(int x, int y)
+                {
+                    CheckCellState(x, y - 1);
+                    CheckCellState(x, y + 0);
+                    CheckCellState(x, y + 1);
+
+                    for (int yn = (y - 1); yn <= (y + 1)  ; yn++)
+                    {
+                        CheckCellState(x, yn);
+                    }
+                }
+
+                void CheckCellState(int x, int y)
+                {
+                    if (cells[x, y].lifeState == true)
+                    {
+                        numberOfAliveNeighbors++;
+                    }
+                }
+            }
+        }
 
         //TODO: update buffer
 
 
+
+        // Updates
         for (int y = 0; y < numberOfRows; y++)
         {
             for (int x = 0; x < numberOfColums; x++)
