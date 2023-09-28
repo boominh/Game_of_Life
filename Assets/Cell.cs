@@ -5,6 +5,7 @@ using UnityEngine;
 public class Cell : MonoBehaviour
 {
     public bool lifeState;
+    public bool nextLifeState;
 
     SpriteRenderer spriteRenderer;
 
@@ -12,5 +13,6 @@ public class Cell : MonoBehaviour
     {
         spriteRenderer ??= GetComponent<SpriteRenderer>();
         spriteRenderer.enabled = lifeState;
+        lifeState = nextLifeState;
     }
 }

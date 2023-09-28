@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameOfLife : MonoBehaviour
@@ -63,36 +65,46 @@ public class GameOfLife : MonoBehaviour
         // different code depending on # of neighbors
         // edge cases
         // numberOfAliveNeighbors
+        // CompensateOwnCell
 
         for (int y = 0; y < numberOfRows; y++)
         {
             for (int x = 0; x < numberOfColums; x++)
             {
-                void CheckColumn(int x, int y)
-                {
-                    CheckCellState(x, y - 1);
-                    CheckCellState(x, y + 0);
-                    CheckCellState(x, y + 1);
+                CheckNeighborsAndOwnCell(x, y);
+                CompensateForOwnCell(x, y);
 
-                    for (int yn = (y - 1); yn <= (y + 1)  ; yn++)
+                
+                if (CheckLifeState(x, y))
+                {
+                    if (numberOfAliveNeighbors < 2)
                     {
-                        CheckCellState(x, yn);
+                        cells[y, x].nextLifeState = false;
                     }
+
+                    if (numberOfAliveNeighbors == 2 || numberOfAliveNeighbors == 3)
+                    {
+                        cells[y, x].nextLifeState = true;
+                    }
+
+                    if (numberOfAliveNeighbors > 3)
+                    {
+                        cells[y, x].nextLifeState = false;
+                    }
+
                 }
 
-                void CheckCellState(int x, int y)
+                if (CheckLifeState(x, y) == false)
                 {
-                    if (cells[x, y].lifeState == true)
+                    if (numberOfAliveNeighbors == 3)
                     {
-                        numberOfAliveNeighbors++;
+                        cells[y, x].nextLifeState = true;
                     }
                 }
             }
         }
 
         //TODO: update buffer
-
-
 
         // Updates
         for (int y = 0; y < numberOfRows; y++)
@@ -102,5 +114,42 @@ public class GameOfLife : MonoBehaviour
                 cells[x, y].UpdateStatus();
             }
         }
+    }
+
+    void CompensateForOwnCell(int x, int y)
+    {
+        if (cells[y, x].lifeState == true)
+        {
+            numberOfAliveNeighbors--;
+        }
+    }
+    void CheckNeighborsAndOwnCell(int x, int y)
+    {
+        CheckColumn(x - 1, y);
+        CheckColumn(x + 0, y);
+        CheckColumn(x + 1, y);
+    }
+    void CheckColumn(int x, int y)
+    {
+        CheckNeighborLifeState(x, y - 1);
+        CheckNeighborLifeState(x, y + 0);
+        CheckNeighborLifeState(x, y + 1);
+
+        //for (int yn = (y - 1); yn <= (y + 1)  ; yn++)
+        //{
+        //    CheckCellState(x, yn);
+        //}
+    }
+    void CheckNeighborLifeState(int x, int y)
+    {
+        if (cells[x, y].lifeState == true)
+        {
+            numberOfAliveNeighbors++;
+        }
+    }
+
+    bool CheckLifeState(int x, int y)
+    {
+        return cells[x, y].lifeState;
     }
 }
