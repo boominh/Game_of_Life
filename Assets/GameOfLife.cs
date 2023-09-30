@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameOfLife : MonoBehaviour
 {
+    public int frameRate;
     public GameObject cellPrefab;
     Cell[,] cells;
 
@@ -16,7 +17,6 @@ public class GameOfLife : MonoBehaviour
     void Start()
     {
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 4;
 
         numberOfRows   = (int)Mathf.Floor( Camera.main.orthographicSize * 2 / cellSize);
         numberOfColums = (int)Mathf.Floor((Camera.main.orthographicSize * 2 
@@ -49,6 +49,8 @@ public class GameOfLife : MonoBehaviour
     
     void Update()
     {
+        Application.targetFrameRate = frameRate;
+
         for (int y = 0; y < numberOfRows; y++)
         {
             for (int x = 0; x < numberOfColums; x++)
@@ -107,18 +109,18 @@ public class GameOfLife : MonoBehaviour
 
     void CheckColumn(int x, int y)
     {
-        CheckNeighborLifeState(x, y - 1);
-        CheckNeighborLifeState(x, y + 0);
-        CheckNeighborLifeState(x, y + 1);
+        CheckCellLifeState(x, y - 1);
+        CheckCellLifeState(x, y + 0);
+        CheckCellLifeState(x, y + 1);
     }
 
-    void CheckNeighborLifeState(int x, int y)
+    void CheckCellLifeState(int x, int y)
     {
         // Solving edge cases
         if (y >= 0 && y < numberOfRows &&
             x >= 0 && x < numberOfColums)
         {
-            if (cells[x, y].isAlive == true)
+            if (cells[x, y].isAlive)
             {
                 numberOfAliveCells++;
             }
