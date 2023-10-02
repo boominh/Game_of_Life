@@ -99,3 +99,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAlive: 0
   nextLifeState: 0
+  previousLifeState: 0

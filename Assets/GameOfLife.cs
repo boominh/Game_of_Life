@@ -8,7 +8,7 @@ public class GameOfLife : MonoBehaviour
     public GameObject cellPrefab;
     Cell[,] cells;
 
-    float cellSize = 0.1f;
+    float cellSize = 0.01f;
     int numberOfColums, numberOfRows;
     int spawnChancePercentage = 15;
 
