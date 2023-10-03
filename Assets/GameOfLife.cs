@@ -5,13 +5,14 @@ using UnityEngine;
 public class GameOfLife : MonoBehaviour
 {
     public int frameRate;
+    public int spawnChancePercentage = 15;
+
     public GameObject cellPrefab;
+
+    float cellSize = 0.1f;
+    
     Cell[,] cells;
-
-    float cellSize = 0.01f;
     int numberOfColums, numberOfRows;
-    int spawnChancePercentage = 15;
-
     int numberOfAliveCells;
 
     void Start()
@@ -39,7 +40,7 @@ public class GameOfLife : MonoBehaviour
 
                 if (Random.Range(0, 100) < spawnChancePercentage)
                 {
-                    cells[x, y].isAlive = true;
+                    cells[x, y].currentLifeState = true;
                 }
 
                 cells[x, y].UpdateStatus();
@@ -57,7 +58,7 @@ public class GameOfLife : MonoBehaviour
             {
                 CheckNeighborsAndOwnCell(x, y);
                 
-                if (cells[x, y].isAlive)
+                if (cells[x, y].currentLifeState)
                 {
                     numberOfAliveCells--;   // Compensation for counting own cell
 
@@ -120,7 +121,7 @@ public class GameOfLife : MonoBehaviour
         if (y >= 0 && y < numberOfRows &&
             x >= 0 && x < numberOfColums)
         {
-            if (cells[x, y].isAlive)
+            if (cells[x, y].currentLifeState)
             {
                 numberOfAliveCells++;
             }

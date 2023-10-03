@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
-    public bool isAlive;
+    public bool currentLifeState;
     public bool nextLifeState;
     public bool previousLifeState;
+
+    byte trailFadingConstant = 25;
 
     Color32 aliveColor = new Color32(86, 198, 57, 255);
     Color32 trailColor = new Color32(0, 100, 0, 255);
@@ -16,33 +18,31 @@ public class Cell : MonoBehaviour
     public void UpdateStatus()
     {
         spriteRenderer ??= GetComponent<SpriteRenderer>();
-
-        spriteRenderer.enabled = isAlive;
+        spriteRenderer.enabled = currentLifeState;
 
         TrailEffect();
     }
 
     private void TrailEffect()
     {
-        if (isAlive != previousLifeState)
+        if (currentLifeState == false)
         {
-            if (isAlive == false)
-            {
-                spriteRenderer.color = trailColor;
-                spriteRenderer.enabled = true;
-            }
+            spriteRenderer.color = trailColor;
+            trailColor.g -= trailFadingConstant;
+            Mathf.Clamp(trailColor.g, 0, 100);
+            spriteRenderer.enabled = true;
+        }
 
-            if (isAlive)
-            {
-                spriteRenderer.color = aliveColor;
-            }
+        if (currentLifeState)
+        {
+            spriteRenderer.color = aliveColor;
         }
     }
 
     public void UpdateNextLifeState()
     {
-        previousLifeState = isAlive;
-        isAlive = nextLifeState;
+        previousLifeState = currentLifeState;
+        currentLifeState = nextLifeState;
     }
 }
 
