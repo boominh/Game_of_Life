@@ -7,14 +7,15 @@ public class GameOfLife : MonoBehaviour
     public int frameRate;
     public int spawnChancePercentage = 15;
 
-    public GameObject cellPrefab;
-
+    float timeOfNextUpdate;
     float cellSize = 0.1f;
-    
+
     Cell[,] cells;
     int numberOfColums, numberOfRows;
-    int numberOfAliveCells;
+    int numberOfAliveNeighbors;
 
+    public GameObject cellPrefab;
+    
     void Start()
     {
         QualitySettings.vSyncCount = 0;
@@ -43,36 +44,45 @@ public class GameOfLife : MonoBehaviour
                     cells[x, y].currentLifeState = true;
                 }
 
-                cells[x, y].UpdateStatus();
+                cells[x, y].UpdateSpriteRenderer();
             }
         }
     }
     
     void Update()
     {
-        Application.targetFrameRate = frameRate;
+        //Application.targetFrameRate = frameRate;
+        
+        if (Time.time > timeOfNextUpdate)
+        {
+            timeOfNextUpdate = Time.time + 1;
+            UpdateCells();
+        }
+    }
 
+    private void UpdateCells()
+    {
         for (int y = 0; y < numberOfRows; y++)
         {
             for (int x = 0; x < numberOfColums; x++)
             {
                 CheckNeighborsAndOwnCell(x, y);
-                
+
                 if (cells[x, y].currentLifeState)
                 {
-                    numberOfAliveCells--;   // Compensation for counting own cell
+                    numberOfAliveNeighbors--;   // Compensation for counting own cell
 
-                    if (numberOfAliveCells < 2)
+                    if (numberOfAliveNeighbors < 2)
                     {
                         cells[x, y].nextLifeState = false;
                     }
 
-                    if (numberOfAliveCells == 2 || numberOfAliveCells == 3)
+                    if (numberOfAliveNeighbors == 2 || numberOfAliveNeighbors == 3)
                     {
                         cells[x, y].nextLifeState = true;
                     }
 
-                    if (numberOfAliveCells > 3)
+                    if (numberOfAliveNeighbors > 3)
                     {
                         cells[x, y].nextLifeState = false;
                     }
@@ -80,18 +90,19 @@ public class GameOfLife : MonoBehaviour
 
                 else
                 {
-                    if (numberOfAliveCells == 3)
+                    if (numberOfAliveNeighbors == 3)
                     {
                         cells[x, y].nextLifeState = true;
                     }
                 }
 
-                numberOfAliveCells = 0;
+                // Reset neighbor counter for the next cell
+                numberOfAliveNeighbors = 0;
 
-                cells[x, y].UpdateStatus();
+                cells[x, y].UpdateSpriteRenderer();
             }
         }
-        
+
         for (int y = 0; y < numberOfRows; y++)
         {
             for (int x = 0; x < numberOfColums; x++)
@@ -117,13 +128,13 @@ public class GameOfLife : MonoBehaviour
 
     void CheckCellLifeState(int x, int y)
     {
-        // Solving edge cases
+        // Solves edge cases
         if (y >= 0 && y < numberOfRows &&
-            x >= 0 && x < numberOfColums)
+            x >= 0 && x < numberOfColums) 
         {
             if (cells[x, y].currentLifeState)
             {
-                numberOfAliveCells++;
+                numberOfAliveNeighbors++;
             }
         }
     }
