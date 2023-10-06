@@ -3,27 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using TMPro;
 
 public class GameOfLife : MonoBehaviour
 {
-    public int frameRate;
     public int spawnChancePercentage = 15;
+    public float cellSize = 0.1f;
+    public GameObject cellPrefab;
 
     float timeOfNextUpdate;
-    float cellSize = 0.1f;
+    float timeBetweenUpdates = 1 / 100;
 
     Cell[,] cells;
     int numberOfColums, numberOfRows;
     int numberOfAliveNeighbors;
     
-    int populationCounter;
-    int generation;
+    int generation = 1;
+    int inhabitantCounter;
     List<int> populations = new List<int>();
-    bool populationCountStable;
-    bool printedGeneration = false;
+    bool populationCountStable = false;
+    bool printedMessage = false;
+    public TextMeshProUGUI textMeshPro;
+    string message;
+    float typingSpeed = 0.05f;
 
-    public GameObject cellPrefab;
-    
     void Start()
     {
         QualitySettings.vSyncCount = 0;
@@ -58,24 +61,23 @@ public class GameOfLife : MonoBehaviour
     }
     
     void Update()
-    {
-        //Application.targetFrameRate = frameRate;
-        
+    {  
         if (Time.time > timeOfNextUpdate)
         {
-            timeOfNextUpdate = Time.time + 1 / 16;
-            CheckAndUpdateCells();
+            timeOfNextUpdate = Time.time + timeBetweenUpdates;
+            CheckAndBufferNextLifeState();
+            ApplyBufferedLifeState();
+            CheckSimulationStability();
         }
     }
 
-    private void CheckAndUpdateCells()
+    void CheckAndBufferNextLifeState()
     {
         for (int y = 0; y < numberOfRows; y++)
         {
             for (int x = 0; x < numberOfColums; x++)
             {
-                //CheckNeighborsAndOwnCell(x, y);
-                NewCheckNeighbors(x, y);
+                CheckForAliveCells(x, y);
 
                 if (cells[x, y].currentLifeState)
                 {
@@ -111,16 +113,47 @@ public class GameOfLife : MonoBehaviour
                 cells[x, y].UpdateSpriteRenderer();
             }
         }
-
-        CheckSimulationStability();
-
-        UpdateNextGenLifeState();
     }
 
-    private void CheckSimulationStability()
+    void CheckForAliveCells (int x, int y)
+    {
+        for (int xCor = x - 1; xCor <= x + 1; xCor++)
+        {
+            for (int yCor = y - 1; yCor <= y + 1; yCor++)
+            {
+                CheckCellLifeState(xCor, yCor);
+            }
+        }
+    }
+
+    void CheckCellLifeState(int x, int y)
+    {
+        // Solves edge cases
+        if (y >= 0 && y < numberOfRows &&
+            x >= 0 && x < numberOfColums) 
+        {
+            if (cells[x, y].currentLifeState)
+            {
+                numberOfAliveNeighbors++;
+            }
+        }
+    }
+
+    void ApplyBufferedLifeState()
+    {
+        for (int y = 0; y < numberOfRows; y++)
+        {
+            for (int x = 0; x < numberOfColums; x++)
+            {
+                cells[x, y].UpdateNextLifeState();
+            }
+        }
+    }
+
+    void CheckSimulationStability()
     {
         generation++;
-        populationCounter = 0;
+        inhabitantCounter = 0;
 
         for (int y = 0; y < numberOfRows; y++)
         {
@@ -128,25 +161,25 @@ public class GameOfLife : MonoBehaviour
             {
                 if (cells[x, y].currentLifeState)
                 {
-                    populationCounter++;
+                    inhabitantCounter++;
                 }
             }
         }
 
-        populations.Add(populationCounter);
+        populations.Add(inhabitantCounter);
 
-        // Check only the 5 lateset gens
         if (populations.Count > 5)
         {
             populations.RemoveAt(0);
         }
 
         populationCountStable = PopulationCountStable(populations);
-        
-        if (populationCountStable && !printedGeneration)
+
+        if (populationCountStable && !printedMessage)
         {
-            Debug.Log($"Simulation now stable. Took {generation - 5}");
-            printedGeneration = true;
+            message = $"simulation now stable after {generation - 5} generation(s).";
+            StartCoroutine(TypeMessage());
+            printedMessage = true;
         }
     }
 
@@ -167,52 +200,17 @@ public class GameOfLife : MonoBehaviour
 
         return true;
     }
-    private void UpdateNextGenLifeState()
+
+    IEnumerator TypeMessage()
     {
-        for (int y = 0; y < numberOfRows; y++)
+        textMeshPro.enabled = true;
+
+        int characterIndex = 0;
+        while (characterIndex < message.Length)
         {
-            for (int x = 0; x < numberOfColums; x++)
-            {
-                cells[x, y].UpdateNextLifeState();
-            }
-        }
-    }
-
-    void CheckNeighborsAndOwnCell(int x, int y)
-    {
-        CheckColumn(x - 1, y);
-        CheckColumn(x + 0, y);
-        CheckColumn(x + 1, y);
-    }
-
-    void CheckColumn(int x, int y)
-    {
-        CheckCellLifeState(x, y - 1);
-        CheckCellLifeState(x, y + 0);
-        CheckCellLifeState(x, y + 1);
-    }
-
-    void NewCheckNeighbors (int x, int y)
-    {
-        for (int nX = x - 1; nX <= x + 1; nX++)
-        {
-            for (int nY = y - 1; nY <= y + 1; nY++)
-            {
-                CheckCellLifeState(nX, nY);
-            }
-        }
-    }
-
-    void CheckCellLifeState(int x, int y)
-    {
-        // Solves edge cases
-        if (y >= 0 && y < numberOfRows &&
-            x >= 0 && x < numberOfColums) 
-        {
-            if (cells[x, y].currentLifeState)
-            {
-                numberOfAliveNeighbors++;
-            }
+            textMeshPro.text += message[characterIndex];
+            characterIndex++;
+            yield return new WaitForSeconds(typingSpeed);
         }
     }
 }
