@@ -5,7 +5,7 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - cellPrefab: {fileID: 3647740128648796059, guid: a809aa7296203ea4a9de5f1faca2835e, type: 3}
-  executionOrder: 0
+  executionOrder: 50
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

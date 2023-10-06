@@ -18,14 +18,18 @@ public class GameOfLife : MonoBehaviour
     int numberOfColums, numberOfRows;
     int numberOfAliveNeighbors;
     
-    int generation = 1;
+    int generation;
+    int finalGeneration;
     int inhabitantCounter;
     List<int> populations = new List<int>();
     bool populationCountStable = false;
-    bool printedMessage = false;
+
+    bool printMessage = false;
     public TextMeshProUGUI textMeshPro;
     string message;
     float typingSpeed = 0.05f;
+    float timer = 0f;
+    int characterIndex = 0;
 
     void Start()
     {
@@ -175,11 +179,17 @@ public class GameOfLife : MonoBehaviour
 
         populationCountStable = PopulationCountStable(populations);
 
-        if (populationCountStable && !printedMessage)
+        if (populationCountStable)
         {
-            message = $"simulation now stable after {generation - 5} generation(s).";
-            StartCoroutine(TypeMessage());
-            printedMessage = true;
+            finalGeneration = generation - 5;
+            message = $"simulation now stable after {finalGeneration} generation(s).";
+            printMessage = true;
+            populationCountStable = false;
+        }
+
+        if (printMessage)
+        {
+            TypeMessage();
         }
     }
 
@@ -201,16 +211,16 @@ public class GameOfLife : MonoBehaviour
         return true;
     }
 
-    IEnumerator TypeMessage()
+    void TypeMessage()
     {
         textMeshPro.enabled = true;
+        timer += Time.unscaledDeltaTime;
 
-        int characterIndex = 0;
-        while (characterIndex < message.Length)
+        if (timer >= typingSpeed && characterIndex < message.Length)
         {
             textMeshPro.text += message[characterIndex];
             characterIndex++;
-            yield return new WaitForSeconds(typingSpeed);
+            timer = 0f;
         }
     }
 }
