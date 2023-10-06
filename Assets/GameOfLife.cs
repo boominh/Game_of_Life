@@ -12,7 +12,7 @@ public class GameOfLife : MonoBehaviour
     public GameObject cellPrefab;
 
     float timeOfNextUpdate;
-    float timeBetweenUpdates = 1 / 100;
+    float timeBetweenUpdates = 1 / 4;
 
     Cell[,] cells;
     int numberOfColums, numberOfRows;
@@ -210,7 +210,7 @@ public class GameOfLife : MonoBehaviour
         {
             textMeshPro.text += message[characterIndex];
             characterIndex++;
-            yield return new WaitForSeconds(typingSpeed);
+            yield return new WaitForSeconds(typingSpeed / Time.timeScale);
         }
     }
 }

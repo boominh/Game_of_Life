@@ -331,7 +331,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc787aff695274841a4d54a32c922237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnChancePercentage: 15
+  spawnChancePercentage: 40
+  cellSize: 0.1
   cellPrefab: {fileID: 3647740128648796059, guid: a809aa7296203ea4a9de5f1faca2835e, type: 3}
   textMeshPro: {fileID: 1026861141}
 --- !u!114 &519420034

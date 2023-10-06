@@ -14,11 +14,6 @@ public class TimeController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            if (Time.timeScale == maxSpeed)
-            {
-                return;
-            }
-
             Time.timeScale /= 2;
 
             if (Time.timeScale <= minSpeed)
@@ -31,6 +26,11 @@ public class TimeController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
+            if (Time.timeScale == maxSpeed)
+            {
+                return;
+            }
+
             Time.timeScale = Mathf.Clamp(Time.timeScale * 2, minSpeed, maxSpeed);
 
             print($"Timescale is: {Time.timeScale}.");
