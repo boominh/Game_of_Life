@@ -7,7 +7,7 @@ public class TimeController : MonoBehaviour
 {
     float previousTimeScale;
 
-    float maxSpeed = 256;
+    float maxSpeed = 64;
     float minSpeed = 1/16;
 
     void Update()
