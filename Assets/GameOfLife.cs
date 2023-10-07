@@ -7,7 +7,6 @@ using TMPro;
 
 public class GameOfLife : MonoBehaviour
 {
-    public int spawnChancePercentage = 15;
     public float cellSize = 0.1f;
     public GameObject cellPrefab;
 
@@ -17,6 +16,7 @@ public class GameOfLife : MonoBehaviour
     Cell[,] cells;
     int numberOfColums, numberOfRows;
     int numberOfAliveNeighbors;
+    int spawnChancePercentage;
     
     int generation = 1;
     int inhabitantCounter;
@@ -29,6 +29,7 @@ public class GameOfLife : MonoBehaviour
 
     void Start()
     {
+        spawnChancePercentage = Mathf.RoundToInt(PlayerPrefs.GetFloat("FillPercentage"));
         QualitySettings.vSyncCount = 0;
 
         numberOfRows   = (int)Mathf.Floor( Camera.main.orthographicSize * 2 / cellSize);
