@@ -5,10 +5,16 @@ using UnityEditor;
 using UnityEngine;
 using TMPro;
 
+//  TODO 
+//  simulation goes too fast?
+//  typing speed and camera speed is not independent
+
 public class GameOfLife : MonoBehaviour
 {
     public float cellSize = 0.1f;
     public GameObject cellPrefab;
+    public TextMeshProUGUI textMeshPro;
+    public bool simulationPlay;
 
     float timeOfNextUpdate;
     float timeBetweenUpdates = 1 / 4;
@@ -23,13 +29,15 @@ public class GameOfLife : MonoBehaviour
     List<int> populations = new List<int>();
     bool populationCountStable = false;
     bool printedMessage = false;
-    public TextMeshProUGUI textMeshPro;
     string message;
     float typingSpeed = 0.05f;
 
     void Start()
     {
+        simulationPlay = (PlayerPrefs.GetInt("SimulationPlay") == 1) ? true : false;
+
         spawnChancePercentage = Mathf.RoundToInt(PlayerPrefs.GetFloat("FillPercentage"));
+        
         QualitySettings.vSyncCount = 0;
 
         numberOfRows   = (int)Mathf.Floor( Camera.main.orthographicSize * 2 / cellSize);
@@ -63,14 +71,30 @@ public class GameOfLife : MonoBehaviour
     
     void Update()
     {  
-        if (Time.time > timeOfNextUpdate)
+        if (Time.time > timeOfNextUpdate && simulationPlay)
         {
             timeOfNextUpdate = Time.time + timeBetweenUpdates;
             CheckAndBufferNextLifeState();
             ApplyBufferedLifeState();
             CheckSimulationStability();
         }
+
+        else if (!simulationPlay)
+        {
+            ShowAliveCells();
+        }
     }
+
+    void ShowAliveCells()
+    {
+        for (int y = 0; y<numberOfRows; y++)
+        {
+            for (int x = 0; x<numberOfColums; x++)
+            {
+                cells[x, y].UpdateSpriteRenderer();
+            }
+        }
+    } 
 
     void CheckAndBufferNextLifeState()
     {

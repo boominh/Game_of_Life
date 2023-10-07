@@ -238,6 +238,8 @@ GameObject:
   - component: {fileID: 519420029}
   - component: {fileID: 519420033}
   - component: {fileID: 519420034}
+  - component: {fileID: 519420035}
+  - component: {fileID: 519420036}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -331,7 +333,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc787aff695274841a4d54a32c922237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnChancePercentage: 40
   cellSize: 0.1
   cellPrefab: {fileID: 3647740128648796059, guid: a809aa7296203ea4a9de5f1faca2835e, type: 3}
   textMeshPro: {fileID: 1026861141}
@@ -345,6 +346,34 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40476c9a008ba7e4e80e83544039d809, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &519420035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bf2a29771ab129488905af49ef7726e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  zoomSpeed: 5
+  minZoom: 2
+  maxZoom: 10
+--- !u!114 &519420036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bda31d9f8d357704aa1643efd63667f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1026861139

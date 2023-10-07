@@ -7,12 +7,6 @@ using TMPro;
 
 public class StartScreen : MonoBehaviour
 {
-    // slider fill percentage
-    // draw own picture
-    // spawn acorn
-    // template
-    // camera
-
     public TextMeshProUGUI textMeshPro;
     public Slider sliderPrefab;
     int minValue = 0;

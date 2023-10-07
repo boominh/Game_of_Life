@@ -8,7 +8,7 @@ public class Cell : MonoBehaviour
     public bool nextLifeState;
     public bool previousLifeState;
 
-    bool startFading = true;
+    bool fading = true;
     byte trailFadingConstant = 100/10;
 
     Color32 aliveColor = new Color32(86, 198, 57, 255);
@@ -31,11 +31,11 @@ public class Cell : MonoBehaviour
         if (currentLifeState != previousLifeState)
         {
             currentTrailColor = originalTrailColor;
-            startFading = true;
+            fading = true;
         }
         
         // While dead
-        if (currentLifeState == false && startFading)
+        if (currentLifeState == false && fading)
         {
             spriteRenderer.color = currentTrailColor;
             spriteRenderer.enabled = true;
@@ -54,7 +54,7 @@ public class Cell : MonoBehaviour
         currentTrailColor.g -= trailFadingConstant;
         if (currentTrailColor.g <= 0)
         {
-            startFading = false;
+            fading = false;
         }
     }
 
@@ -64,11 +64,3 @@ public class Cell : MonoBehaviour
         currentLifeState = nextLifeState;
     }
 }
-
-
-//TODO: Calculate next generation
-// check neighbors -> make function?
-// different code depending on # of neighbors
-// edge cases
-// numberOfAliveNeighbors
-// CompensateOwnCell

@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class TimeController : MonoBehaviour
 {
-    float previousTimeScale;
-
     float maxSpeed = 64;
     float minSpeed = 1/16;
+
+    GameOfLife gameOfLife;
 
     void Update()
     {
@@ -38,16 +38,17 @@ public class TimeController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (Time.timeScale != 0)
+            gameOfLife ??= GetComponent<GameOfLife>();
+
+            if (gameOfLife.simulationPlay)
             {
-                previousTimeScale = Time.timeScale;
-                Time.timeScale = 0;
+                gameOfLife.simulationPlay = false;
                 print("Simulation is paused.");
             }
 
             else
             {
-                Time.timeScale = previousTimeScale;
+                gameOfLife.simulationPlay = true;
                 print("Simulation unpaused.");
             }
         }
