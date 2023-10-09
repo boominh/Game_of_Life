@@ -70,16 +70,23 @@ public class GameOfLife : MonoBehaviour
     }
     
     void Update()
-    {  
-        if (Time.time > timeOfNextUpdate && simulationPlay)
+    {
+        if (simulationPlay)
         {
-            timeOfNextUpdate = Time.time + timeBetweenUpdates;
-            CheckAndBufferNextLifeState();
-            ApplyBufferedLifeState();
-            CheckSimulationStability();
+            //float scaledTimeBetweenUpdates = timeBetweenUpdates / Time.timeScale;
+
+            if (Time.time > timeOfNextUpdate )
+            {
+                //timeOfNextUpdate = Time.time + scaledTimeBetweenUpdates;
+                timeOfNextUpdate = Time.time + timeBetweenUpdates;
+                CheckAndBufferNextLifeState();
+                ApplyBufferedLifeState();
+                CheckSimulationStability();
+            }
+
         }
 
-        else if (!simulationPlay)
+        else
         {
             ShowAliveCells();
         }
@@ -235,7 +242,7 @@ public class GameOfLife : MonoBehaviour
         {
             textMeshPro.text += message[characterIndex];
             characterIndex++;
-            yield return new WaitForSeconds(typingSpeed / Time.timeScale);
+            yield return new WaitForSeconds(typingSpeed * Time.timeScale);
         }
     }
 }
