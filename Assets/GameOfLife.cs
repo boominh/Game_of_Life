@@ -7,7 +7,6 @@ using TMPro;
 
 //  TODO 
 //  simulation goes too fast?
-//  typing speed and camera speed is not independent
 
 public class GameOfLife : MonoBehaviour
 {
