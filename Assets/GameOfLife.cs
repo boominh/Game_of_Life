@@ -5,15 +5,12 @@ using UnityEditor;
 using UnityEngine;
 using TMPro;
 
-//  TODO 
-//  simulation goes too fast?
-
 public class GameOfLife : MonoBehaviour
 {
     public float cellSize = 0.1f;
+    public bool simulationPlay;
     public GameObject cellPrefab;
     public TextMeshProUGUI textMeshPro;
-    public bool simulationPlay;
 
     float timeOfNextUpdate;
     float timeBetweenUpdates = 1 / 4;
@@ -23,13 +20,13 @@ public class GameOfLife : MonoBehaviour
     int numberOfAliveNeighbors;
     int spawnChancePercentage;
     
-    int generation = 1;
+    int generation;
     int inhabitantCounter;
     List<int> populations = new List<int>();
     bool populationCountStable = false;
     bool printedMessage = false;
-    string message;
     float typingSpeed = 0.05f;
+    string message;
 
     void Start()
     {
@@ -72,17 +69,13 @@ public class GameOfLife : MonoBehaviour
     {
         if (simulationPlay)
         {
-            //float scaledTimeBetweenUpdates = timeBetweenUpdates / Time.timeScale;
-
             if (Time.time > timeOfNextUpdate )
             {
-                //timeOfNextUpdate = Time.time + scaledTimeBetweenUpdates;
                 timeOfNextUpdate = Time.time + timeBetweenUpdates;
                 CheckAndBufferNextLifeState();
                 ApplyBufferedLifeState();
                 CheckSimulationStability();
             }
-
         }
 
         else
