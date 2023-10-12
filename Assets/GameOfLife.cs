@@ -16,7 +16,7 @@ public class GameOfLife : MonoBehaviour
     public bool simulationPlay;
 
     float timeOfNextUpdate;
-    float timeBetweenUpdates = 1 / 4;
+    float timeBetweenUpdates = 1f / 16;
 
     Cell[,] cells;
     int numberOfColums, numberOfRows;

@@ -6,8 +6,6 @@ public class Click : MonoBehaviour
 {
     bool lifestate;
 
-    GameOfLife gameOfLife;
-
     private void Update()
     {
         if (Input.GetMouseButton(0))
